@@ -14,6 +14,7 @@ private:
     big_int _denominator;
 
     void optimise(); //сокращает дробь
+    big_int gcd(big_int a, big_int b) const;
 
 public:
 
@@ -25,6 +26,9 @@ public:
     fraction(pp_allocator<big_int::value_type> = pp_allocator<big_int::value_type>());
 
 public:
+    fraction abs() const;
+
+    fraction operator-() const;
 
     fraction &operator+=(fraction const &other) &;
 
@@ -97,6 +101,10 @@ public:
     fraction ln(fraction const &epsilon = fraction(1_bi, 1000000_bi)) const;
 
     fraction lg(fraction const &epsilon = fraction(1_bi, 1000000_bi)) const;
+
+    fraction ln_of_2(fraction const &epsilon) const;
+
+    fraction ln_of_10(fraction const &epsilon) const;
 
 };
 

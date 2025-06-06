@@ -9,6 +9,8 @@
 #include <mutex>
 #include <cmath>
 
+using byte = uint8_t;
+
 namespace __detail
 {
     constexpr size_t nearest_greater_k_of_2(size_t size) noexcept
@@ -45,7 +47,7 @@ private:
     struct block_metadata
     {
         bool occupied : 1;
-        unsigned char size : 7;
+        byte size : 7;
     };
 
     void *_trusted_memory;
@@ -97,8 +99,16 @@ public:
     inline void set_fit_mode(
         allocator_with_fit_mode::fit_mode mode) override;
 
+    inline size_t pow_2(size_t size) const noexcept;
+    byte stepen_of_2(size_t size) const noexcept;   //HMMMMMMMMMMMMMMMMMMMMM
 
-    std::vector<allocator_test_utils::block_info> get_blocks_info() const noexcept override;
+    std::pmr::memory_resource *get_memory_resource() const;
+    fit_mode &get_fit_mod() const noexcept;
+    std::mutex &get_mutex() const noexcept;
+    size_t get_allocator_pool_size() const noexcept;
+    size_t get_block_size(void *current_block) const noexcept;
+    void *get_block_twin(void *current_block) noexcept;
+    fit_mode &get_fit_mode() const noexcept;
 
 private:
 
@@ -107,7 +117,18 @@ private:
     
     inline std::string get_typename() const override;
 
+    size_t get_size_memory() const noexcept;
+
     std::vector<allocator_test_utils::block_info> get_blocks_info_inner() const override;
+    std::vector<allocator_test_utils::block_info> get_blocks_info() const noexcept override;
+
+    void split_block(void *block, byte required_power);
+
+    bool is_busy(void *current_block) const noexcept;
+
+    void *find_first_suitable_block(size_t block_size_to_find) const noexcept;
+    void *find_worst_suitable_block(size_t block_size_to_find) const noexcept;
+    void *find_best_suitable_block(size_t block_size_to_find) const noexcept;
 
     /** TODO: Highly recommended for helper functions to return references */
 

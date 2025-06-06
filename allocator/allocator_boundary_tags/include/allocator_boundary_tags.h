@@ -9,6 +9,8 @@
 #include <iterator>
 #include <mutex>
 
+using byte = uint8_t;
+
 class allocator_boundary_tags final :
     public smart_mem_resource,
     public allocator_test_utils,
@@ -71,6 +73,32 @@ public:
 public:
     
     std::vector<allocator_test_utils::block_info> get_blocks_info() const override;
+
+public:
+    std::mutex &get_mutex() const noexcept;
+    static logger *get_logger(void *);
+    static std::pmr::memory_resource *get_memory_resource(void *ptr);
+    static allocator_with_fit_mode::fit_mode &get_fit_mode(void *);
+    static size_t &get_allocator_pool_size(void *);
+    void *find_first_suitable_block(size_t)  noexcept;
+    void *find_best_suitable_block(size_t)  noexcept;
+    void *find_worst_suitable_block(size_t)  noexcept;
+
+    static void *get_prev_occupied(void *);
+    static void *get_next_occupied(void *);
+    static void *get_pool_start(void *);
+    static void *get_pool_end(void *);
+    static void *get_user_ptr_from_meta(void *);
+    static void *get_meta_ptr_from_user(void *);
+    static size_t &get_user_size_of_block(void *);
+    size_t get_free_size() const noexcept;
+    static size_t get_free_size_between_blocks(void *, void *) noexcept;
+
+    static void *&get_first_occupied_block(void *);
+    static size_t &get_ptr_size(void *);
+    static void *&get_prev_block(void *);
+    static void *&get_next_block(void *);
+    static void *&get_block_allocator(void *);
 
 private:
 
